@@ -18,6 +18,20 @@
 				<input asp-for="SerialNumber" class="form-control" placeholder="Enter serial number" required />
 				<span asp-validation-for="SerialNumber" class="text-danger"></span>
 			</div>
+			<div class="mb-3 form-check">
+    			<input type="checkbox" class="form-check-input" asp-for="HaveWarranty" id="HaveWarranty" />
+    			<label class="form-check-label" asp-for="HaveWarranty"></label>
+			</div>
+
+			<div class="mb-3 form-group">
+				<label asp-for="WarrantyStartDate" class="form-label"></label>
+				<input type="date" class="form-control" asp-for="WarrantyStartDate" />
+				<span asp-validation-for="WarrantyStartDate" class="text-danger"></span>
+				<label asp-for="WarrantyEndDate" class="form-label"></label>
+				<input type="date" class="form-control" asp-for="WarrantyEndDate" />
+				<span asp-validation-for="WarrantyEndDate" class="text-danger"></span>
+			</div>
+			
 
 			<div class="mb-3 form-check">
 				<input type="checkbox" class="form-check-input" asp-for="Active" />

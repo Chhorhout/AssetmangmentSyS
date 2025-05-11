@@ -26,7 +26,8 @@
         <td>@asset.Active</td>
         <td>@asset.HaveWarranty</td>
         <td>
-            <a asp-action="Delete" asp-route-id="@asset.Id">Delete</a>
+            @* <a asp-action="Delete" asp-route-id="@asset.Id">Delete</a> *@
+            <button class="btn btn-danger btnDelete" data-id="@asset.Id">Delete</button>
         </td>
     </tr>
 } 
@@ -35,3 +36,35 @@
            
         </div>
     </div>
+
+@section Scripts {
+    
+    <script>
+        $(function () {
+            $('.btnDelete').click(function () {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var id = $(this).data('id');
+                        $.ajax({
+                            url: '/Asset/Delete/' + id,
+                            type: 'GET',
+                            success: function (response) {
+                                window.location.href = '/Asset/Index';
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+    
