@@ -35,7 +35,7 @@ public class UserController : Controller
 
             await _context.SaveChangesAsync();
 
-            return View();
+            return RedirectToAction(nameof(Index));
         }   
         [HttpGet]
         public async Task<IActionResult> Update(Guid id)
@@ -49,6 +49,19 @@ public class UserController : Controller
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+       public async Task<IActionResult> Delete(Guid id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+             _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));  
         }
         
 }

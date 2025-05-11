@@ -12,6 +12,7 @@
                         <th>Name</th>
                         <th>Created By</th>
                         <th>Kilogram</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -23,6 +24,11 @@
         </td>
         <td>@category.CreatedBy</td>
         <td>@category.Kilogram</td>
+        <td>
+            <a asp-action="Delete" asp-route-id="@category.Id" class="btn btn-danger">Delete</a>
+        </td>
+        
+
     </tr>
 } 
 </tbody>

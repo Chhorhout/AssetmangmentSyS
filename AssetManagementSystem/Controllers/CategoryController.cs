@@ -35,7 +35,7 @@ namespace AssetManagementSystem.Controllers
 
             await _context.SaveChangesAsync();
 
-            return View();
+            return RedirectToAction(nameof(Index));
         }
         [HttpGet]
         public async Task<IActionResult> Update(Guid id)
@@ -54,7 +54,18 @@ namespace AssetManagementSystem.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+             _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));  
+        }
         
         
 

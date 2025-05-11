@@ -29,6 +29,9 @@
         <td>@user.Role</td>
         <td>@user.Active</td>
         <td>@user.CreatedAt</td>
+        <td>
+            <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger">Delete</a>
+        </td>
     </tr>
 } 
 </tbody>

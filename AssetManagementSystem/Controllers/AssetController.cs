@@ -36,7 +36,7 @@ namespace AssetManagementSystem.Controllers
 
             await _context.SaveChangesAsync();
 
-            return View();
+            return RedirectToAction(nameof(Index));
         }
 
 

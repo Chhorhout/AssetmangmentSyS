@@ -52,7 +52,7 @@ namespace AssetManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Assets");
+                    b.ToTable("Assets", (string)null);
                 });
 
             modelBuilder.Entity("AssetManagementSystem.Models.Category", b =>
@@ -81,7 +81,7 @@ namespace AssetManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("AssetManagementSystem.Models.User", b =>
@@ -114,7 +114,7 @@ namespace AssetManagementSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 #pragma warning restore 612, 618
         }
