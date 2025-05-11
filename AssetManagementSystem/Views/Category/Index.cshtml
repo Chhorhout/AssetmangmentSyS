@@ -1,0 +1,32 @@
+﻿@model List<Category>
+
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Category List</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Created By</th>
+                        <th>Kilogram</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model)
+{
+    <tr>
+        <td>
+            <a asp-action="Update" asp-route-id="@category.Id"> @category.Name</a>
+        </td>
+        <td>@category.CreatedBy</td>
+        <td>@category.Kilogram</td>
+    </tr>
+} 
+</tbody>
+            </table>
+           
+        </div>
+    </div>

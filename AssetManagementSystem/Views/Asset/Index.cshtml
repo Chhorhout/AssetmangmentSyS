@@ -1,0 +1,37 @@
+﻿@model List<Asset>
+
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Asset List</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Serial Number</th>
+                        <th>Active</th>
+                        <th>Have Warranty</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var asset in Model)
+{
+    <tr>
+        <td>
+            <a asp-action="Update" asp-route-id="@asset.Id"> @asset.Name</a>
+        </td>
+        <td>@asset.SerialNumber</td>
+        <td>@asset.Active</td>
+        <td>@asset.HaveWarranty</td>
+        <td>
+            <a asp-action="Delete" asp-route-id="@asset.Id">Delete</a>
+        </td>
+    </tr>
+} 
+</tbody>
+            </table>
+           
+        </div>
+    </div>

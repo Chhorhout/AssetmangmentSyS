@@ -1,0 +1,38 @@
+@model List<User>
+
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">User List</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Role</th>
+                        <th>Active</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+{
+    <tr>
+        <td>
+            <a asp-action="Update" asp-route-id="@user.Id"> @user.Name</a>
+        </td>
+        <td>@user.Email</td>
+        <td>@user.Password</td>
+        <td>@user.Role</td>
+        <td>@user.Active</td>
+        <td>@user.CreatedAt</td>
+    </tr>
+} 
+</tbody>
+            </table>
+           
+        </div>
+    </div>
