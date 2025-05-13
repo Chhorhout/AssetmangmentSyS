@@ -1,39 +1,174 @@
 @model User
 
-<div class="container mt-4">
-	<div class="card">
-		<div class="card-header">
-			<h4>Create User</h4>
-		</div>
-		<div class="card-body">
-			<form asp-action="input">
-				<div class="row mb-3">
-					<div class="col-md-6">
-						<label asp-for="Name" class="form-label"></label>
-						<input asp-for="Name" class="form-control" />
-					</div>
-					<div class="col-md-6">
-						<label asp-for="Email" class="form-label"></label>
-						<input asp-for="Email" class="form-control" />
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-12">
+			<div class="card shadow">
+				<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+					<h5 class="mb-0">
+						<i class="bi bi-person-plus me-2"></i>Create User
+					</h5>
+					<div>
+						<a asp-controller="Home" asp-action="Index" class="btn btn-light btn-sm">
+							<i class="bi bi-arrow-left"></i> Back to List
+						</a>
 					</div>
 				</div>
-				<div class="row mb-3">
-					<div class="col-md-6">
-						<label asp-for="Password" class="form-label"></label>
-						<input asp-for="Password" class="form-control" type="password" />
-					</div>
-					<div class="col-md-6">
-						<label asp-for="Role" class="form-label"></label>
-						<input asp-for="Role" class="form-control" />
-					</div>
+				<div class="card-body">
+					<form asp-action="input" class="needs-validation" novalidate>
+						<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
+						<div class="table-responsive">
+							<table class="table table-bordered table-hover">
+								<tbody>
+									<tr>
+										<th class="bg-light" style="width: 200px;">
+											<label asp-for="Name" class="form-label mb-0">
+												User Name
+												<i class="bi bi-info-circle text-primary" data-bs-toggle="tooltip" 
+												   title="Enter the full name of the user"></i>
+											</label>
+										</th>
+										<td>
+											<div class="input-group">
+												<span class="input-group-text">
+													<i class="bi bi-person"></i>
+												</span>
+												<input asp-for="Name" class="form-control" placeholder="Enter user name" required />
+												<div class="invalid-feedback">Please enter a user name</div>
+											</div>
+											<span asp-validation-for="Name" class="text-danger"></span>
+										</td>
+									</tr>
+									<tr>
+										<th class="bg-light">
+											<label asp-for="Email" class="form-label mb-0">
+												Email Address
+												<i class="bi bi-info-circle text-primary" data-bs-toggle="tooltip" 
+												   title="Enter a valid email address"></i>
+											</label>
+										</th>
+										<td>
+											<div class="input-group">
+												<span class="input-group-text">
+													<i class="bi bi-envelope"></i>
+												</span>
+												<input asp-for="Email" class="form-control" placeholder="Enter email" required type="email" />
+												<div class="invalid-feedback">Please enter a valid email address</div>
+											</div>
+											<span asp-validation-for="Email" class="text-danger"></span>
+										</td>
+									</tr>
+									<tr>
+										<th class="bg-light">
+											<label asp-for="Password" class="form-label mb-0">
+												Password
+												<i class="bi bi-info-circle text-primary" data-bs-toggle="tooltip" 
+												   title="Enter a secure password"></i>
+											</label>
+										</th>
+										<td>
+											<div class="input-group">
+												<span class="input-group-text">
+													<i class="bi bi-key"></i>
+												</span>
+												<input asp-for="Password" class="form-control" type="password" placeholder="Enter password" required />
+												<div class="invalid-feedback">Please enter a password</div>
+											</div>
+											<span asp-validation-for="Password" class="text-danger"></span>
+										</td>
+									</tr>
+									<tr>
+										<th class="bg-light">
+											<label asp-for="Role" class="form-label mb-0">
+												User Role
+												<i class="bi bi-info-circle text-primary" data-bs-toggle="tooltip" 
+												   title="Enter the user's role"></i>
+											</label>
+										</th>
+										<td>
+											<div class="input-group">
+												<span class="input-group-text">
+													<i class="bi bi-person-badge"></i>
+												</span>
+												<input asp-for="Role" class="form-control" placeholder="Enter role" required />
+												<div class="invalid-feedback">Please enter a role</div>
+											</div>
+											<span asp-validation-for="Role" class="text-danger"></span>
+										</td>
+									</tr>
+									<tr>
+										<th class="bg-light">
+											<label class="form-label mb-0">Status</label>
+										</th>
+										<td>
+											<div class="form-check form-switch">
+												<input type="checkbox" class="form-check-input" asp-for="Active" />
+												<label class="form-check-label" asp-for="Active">Active</label>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="d-flex justify-content-end mt-4">
+							<button type="reset" class="btn btn-secondary me-2">
+								<i class="bi bi-arrow-counterclockwise"></i> Reset
+							</button>
+							<button type="submit" class="btn btn-success" id="saveButton">
+								<i class="bi bi-save"></i> Save User
+							</button>
+						</div>
+					</form>
 				</div>
-				<div class="form-check mb-3">
-					<input type="checkbox" class="form-check-input" asp-for="Active" />
-					<label class="form-check-label" asp-for="Active"></label>
-				</div>
-				<button type="submit" class="btn btn-primary">Save</button>
-			</form>
+			</div>
 		</div>
 	</div>
 </div>
+
+@section Scripts {
+	<script>
+		// Enable tooltips
+		var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+		var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+			return new bootstrap.Tooltip(tooltipTriggerEl)
+		});
+
+		// Form validation
+		(function () {
+			'use strict'
+			var forms = document.querySelectorAll('.needs-validation')
+			Array.prototype.slice.call(forms).forEach(function (form) {
+				form.addEventListener('submit', function (event) {
+					if (!form.checkValidity()) {
+						event.preventDefault()
+						event.stopPropagation()
+						
+						// Show SweetAlert2 for validation error
+						Swal.fire({
+							icon: 'error',
+							title: 'Validation Error',
+							text: 'Please fill in all required fields before submitting.',
+							confirmButtonColor: '#3085d6'
+						});
+					}
+					form.classList.add('was-validated')
+				}, false)
+			})
+		})()
+
+		// Add input validation styling
+		document.querySelectorAll('input[required]').forEach(input => {
+			input.addEventListener('input', function() {
+				if (this.value.trim() !== '') {
+					this.classList.add('is-valid');
+					this.classList.remove('is-invalid');
+				} else {
+					this.classList.add('is-invalid');
+					this.classList.remove('is-valid');
+				}
+			});
+		});
+	</script>
+}

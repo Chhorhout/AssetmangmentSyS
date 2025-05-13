@@ -18,6 +18,7 @@ namespace AssetManagementSystem.Controllers
             dashboardVm.TotalAssets = _context.Assets.Count();
             dashboardVm.TotalCategories = _context.Categories.Count();
             dashboardVm.TotalUsers = _context.Users.Count();
+            dashboardVm.TotalMaintainer = _context.Maintainers.Count();
             return View(dashboardVm);
 
         }

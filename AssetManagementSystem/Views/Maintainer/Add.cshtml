@@ -1,4 +1,4 @@
-@model Category
+@model Maintainer
 
 <div class="container-fluid">
 	<div class="row">
@@ -6,19 +6,17 @@
 			<div class="card shadow">
 				<div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
 					<h5 class="mb-0">
-						<i class="bi bi-pencil-square me-2"></i>Update Category
+						<i class="bi bi-person-plus me-2"></i>Add New Maintainer
 					</h5>
 					<div>
-						<a asp-action="Index" class="btn btn-light btn-sm">
+						<a asp-controller="Home" asp-action="Index" class="btn btn-light btn-sm">
 							<i class="bi bi-arrow-left"></i> Back to List
 						</a>
 					</div>
 				</div>
 				<div class="card-body">
-					<form asp-action="Update" class="needs-validation" novalidate>
+					<form asp-action="Add" class="needs-validation" novalidate>
 						<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-						
-						<input type="hidden" asp-for="Id" />
 
 						<div class="table-responsive">
 							<table class="table table-bordered table-hover">
@@ -26,28 +24,9 @@
 									<tr>
 										<th class="bg-light" style="width: 200px;">
 											<label asp-for="Name" class="form-label mb-0">
-												Category Name
+												Maintainer Name
 												<i class="bi bi-info-circle text-primary" data-bs-toggle="tooltip" 
-												   title="Enter a unique category name"></i>
-											</label>
-										</th>
-										<td>
-											<div class="input-group">
-												<span class="input-group-text">
-													<i class="bi bi-tag"></i>
-												</span>
-												<input asp-for="Name" class="form-control" placeholder="Enter category name" required />
-												<div class="invalid-feedback">Please enter a category name</div>
-											</div>
-											<span asp-validation-for="Name" class="text-danger"></span>
-										</td>
-									</tr>
-									<tr>
-										<th class="bg-light">
-											<label asp-for="CreatedBy" class="form-label mb-0">
-												Created By
-												<i class="bi bi-info-circle text-primary" data-bs-toggle="tooltip" 
-												   title="Enter the name of the person who created this category"></i>
+												   title="Enter the full name of the maintainer"></i>
 											</label>
 										</th>
 										<td>
@@ -55,30 +34,67 @@
 												<span class="input-group-text">
 													<i class="bi bi-person"></i>
 												</span>
-												<input asp-for="CreatedBy" class="form-control" placeholder="Enter created by" required />
-												<div class="invalid-feedback">Please enter the creator's name</div>
+												<input asp-for="Name" class="form-control" placeholder="Enter maintainer name" required />
+												<div class="invalid-feedback">Please enter a maintainer name</div>
 											</div>
-											<span asp-validation-for="CreatedBy" class="text-danger"></span>
+											<span asp-validation-for="Name" class="text-danger"></span>
 										</td>
 									</tr>
 									<tr>
 										<th class="bg-light">
-											<label asp-for="Kilogram" class="form-label mb-0">
-												Weight (Kilogram)
+											<label asp-for="Email" class="form-label mb-0">
+												Email Address
 												<i class="bi bi-info-circle text-primary" data-bs-toggle="tooltip" 
-												   title="Enter the weight in kilograms"></i>
+												   title="Enter a valid email address"></i>
 											</label>
 										</th>
 										<td>
 											<div class="input-group">
 												<span class="input-group-text">
-													<i class="bi bi-scale"></i>
+													<i class="bi bi-envelope"></i>
 												</span>
-												<input asp-for="Kilogram" class="form-control" placeholder="Enter kilogram" required />
-												<span class="input-group-text">kg</span>
-												<div class="invalid-feedback">Please enter the weight in kilograms</div>
+												<input asp-for="Email" class="form-control" placeholder="Enter email" required type="email" />
+												<div class="invalid-feedback">Please enter a valid email address</div>
 											</div>
-											<span asp-validation-for="Kilogram" class="text-danger"></span>
+											<span asp-validation-for="Email" class="text-danger"></span>
+										</td>
+									</tr>
+									<tr>
+										<th class="bg-light">
+											<label asp-for="PhoneNumber" class="form-label mb-0">
+												Phone Number
+												<i class="bi bi-info-circle text-primary" data-bs-toggle="tooltip" 
+												   title="Enter a valid phone number"></i>
+											</label>
+										</th>
+										<td>
+											<div class="input-group">
+												<span class="input-group-text">
+													<i class="bi bi-telephone"></i>
+												</span>
+												<input asp-for="PhoneNumber" class="form-control" placeholder="Enter phone number" required />
+												<div class="invalid-feedback">Please enter a phone number</div>
+											</div>
+											<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+										</td>
+									</tr>
+									<tr>
+										<th class="bg-light">
+											<label asp-for="City" class="form-label mb-0">
+												City
+												<i class="bi bi-info-circle text-primary" data-bs-toggle="tooltip" 
+												   title="Enter the city where the maintainer is located"></i>
+											</label>
+										</th>
+										<td>
+											<div class="input-group">
+												<span class="input-group-text">
+													<i class="bi bi-geo-alt"></i>
+												</span>
+												<input asp-for="City" class="form-control" placeholder="Enter city" required />
+												<div class="invalid-feedback">Please enter a city</div>
+											</div>
+											<span asp-validation-for="City" class="text-danger"></span>
 										</td>
 									</tr>
 									<tr>
@@ -101,7 +117,7 @@
 								<i class="bi bi-arrow-counterclockwise"></i> Reset
 							</button>
 							<button type="submit" class="btn btn-success" id="saveButton">
-								<i class="bi bi-save"></i> Update Category
+								<i class="bi bi-save"></i> Save Maintainer
 							</button>
 						</div>
 					</form>
@@ -153,6 +169,28 @@
 					this.classList.remove('is-valid');
 				}
 			});
+		});
+
+		// Email validation
+		document.querySelector('input[type="email"]')?.addEventListener('input', function() {
+			const email = this.value.trim();
+			const isValid = emailRegex.test(email);
+			
+			if (isValid) {
+				this.classList.add('is-valid');
+				this.classList.remove('is-invalid');
+			} else {
+				this.classList.add('is-invalid');
+				this.classList.remove('is-valid');
+			const isValid = emailRegex.test(email);
+			
+			if (isValid) {
+				this.classList.add('is-valid');
+				this.classList.remove('is-invalid');
+			} else {
+				this.classList.add('is-invalid');
+				this.classList.remove('is-valid');
+			}
 		});
 	</script>
 }

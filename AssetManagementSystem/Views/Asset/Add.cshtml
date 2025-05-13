@@ -1,51 +1,182 @@
 ﻿@model Asset
 
-<form asp-action="Add" class="needs-validation" novalidate>
-	<div class="card shadow">
-		<div class="card-header bg-primary text-white">
-			<h5 class="mb-0">Add New Asset</h5>
-		</div>
-		<div class="card-body">
+<div class="card shadow mb-4">
+	<div class="card-header py-3 d-flex justify-content-between align-items-center">
+		<h6 class="m-0 font-weight-bold text-primary">
+			<i class="fas fa-plus-circle mr-2"></i>Add New Asset
+		</h6>
+		<a asp-controller="Asset" asp-action="Index" class="btn btn-secondary btn-sm">
+			<i class="fas fa-arrow-left mr-1"></i> Back to List
+		</a>
+	</div>
+	<div class="card-body">
+		<form asp-action="Add" class="needs-validation" novalidate>
 			<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
-			<div class="mb-3 form-group">
-				<label asp-for="Name" class="form-label"></label>
-				<input asp-for="Name" class="form-control" placeholder="Enter asset name" required />
-				<span asp-validation-for="Name" class="text-danger"></span>
+
+			<div class="row">
+				<!-- Basic Information -->
+				<div class="col-md-6">
+					<div class="card shadow-sm mb-4">
+						<div class="card-header bg-light">
+							<h6 class="m-0 font-weight-bold text-primary">
+								<i class="fas fa-info-circle mr-2"></i>Basic Information
+							</h6>
+						</div>
+						<div class="card-body">
+							<div class="mb-3 form-group">
+								<label asp-for="Name" class="form-label">
+									<i class="fas fa-box mr-1"></i>Asset Name
+								</label>
+								<input asp-for="Name" class="form-control" placeholder="Enter asset name" required 
+									data-bs-toggle="tooltip" data-bs-placement="right" 
+									title="Please enter an asset name" />
+								<span asp-validation-for="Name" class="text-danger"></span>
+								<div class="invalid-feedback">Please enter an asset name</div>
+							</div>
+
+							<div class="mb-3 form-group">
+								<label asp-for="SerialNumber" class="form-label">
+									<i class="fas fa-barcode mr-1"></i>Serial Number
+								</label>
+								<input asp-for="SerialNumber" class="form-control" placeholder="Enter serial number" required 
+									data-bs-toggle="tooltip" data-bs-placement="right" 
+									title="Please enter a serial number" />
+								<span asp-validation-for="SerialNumber" class="text-danger"></span>
+								<div class="invalid-feedback">Please enter a serial number</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Warranty Information -->
+				<div class="col-md-6">
+					<div class="card shadow-sm mb-4">
+						<div class="card-header bg-light">
+							<h6 class="m-0 font-weight-bold text-primary">
+								<i class="fas fa-shield-alt mr-2"></i>Warranty Information
+							</h6>
+						</div>
+						<div class="card-body">
+							<div class="mb-3 form-check">
+								<input type="checkbox" class="form-check-input" asp-for="HaveWarranty" id="HaveWarranty" />
+								<label class="form-check-label" asp-for="HaveWarranty">
+									<i class="fas fa-check-circle mr-1"></i>Has Warranty
+								</label>
+							</div>
+
+							<div id="warrantyDates" class="warranty-section">
+								<div class="mb-3 form-group">
+									<label asp-for="WarrantyStartDate" class="form-label">
+										<i class="fas fa-calendar-plus mr-1"></i>Warranty Start Date
+									</label>
+									<input type="date" class="form-control" asp-for="WarrantyStartDate" 
+										data-bs-toggle="tooltip" data-bs-placement="right" 
+										title="Please select warranty start date" />
+									<span asp-validation-for="WarrantyStartDate" class="text-danger"></span>
+									<div class="invalid-feedback">Please select warranty start date</div>
+								</div>
+
+								<div class="mb-3 form-group">
+									<label asp-for="WarrantyEndDate" class="form-label">
+										<i class="fas fa-calendar-minus mr-1"></i>Warranty End Date
+									</label>
+									<input type="date" class="form-control" asp-for="WarrantyEndDate" 
+										data-bs-toggle="tooltip" data-bs-placement="right" 
+										title="Please select warranty end date" />
+									<span asp-validation-for="WarrantyEndDate" class="text-danger"></span>
+									<div class="invalid-feedback">Please select warranty end date</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
-			<div class="mb-3 form-group">
-				<label asp-for="SerialNumber" class="form-label"></label>
-				<input asp-for="SerialNumber" class="form-control" placeholder="Enter serial number" required />
-				<span asp-validation-for="SerialNumber" class="text-danger"></span>
-			</div>
-			<div class="mb-3 form-check">
-    			<input type="checkbox" class="form-check-input" asp-for="HaveWarranty" id="HaveWarranty" />
-    			<label class="form-check-label" asp-for="HaveWarranty"></label>
-			</div>
-
-			<div class="mb-3 form-group">
-				<label asp-for="WarrantyStartDate" class="form-label"></label>
-				<input type="date" class="form-control" asp-for="WarrantyStartDate" />
-				<span asp-validation-for="WarrantyStartDate" class="text-danger"></span>
-				<label asp-for="WarrantyEndDate" class="form-label"></label>
-				<input type="date" class="form-control" asp-for="WarrantyEndDate" />
-				<span asp-validation-for="WarrantyEndDate" class="text-danger"></span>
-			</div>
-			
-
-			<div class="mb-3 form-check">
-				<input type="checkbox" class="form-check-input" asp-for="Active" />
-				<label class="form-check-label" asp-for="Active"></label>
+			<!-- Status Section -->
+			<div class="card shadow-sm mb-4">
+				<div class="card-header bg-light">
+					<h6 class="m-0 font-weight-bold text-primary">
+						<i class="fas fa-toggle-on mr-2"></i>Status
+					</h6>
+				</div>
+				<div class="card-body">
+					<div class="form-check form-switch">
+						<input type="checkbox" class="form-check-input" asp-for="Active" id="activeSwitch" />
+						<label class="form-check-label" asp-for="Active">
+							<i class="fas fa-power-off mr-1"></i>Active Status
+						</label>
+					</div>
+				</div>
 			</div>
 
-			<div class="d-flex justify-content-end">
-				<button type="submit" class="btn btn-success me-2">
-					<i class="bi bi-save"></i> Save
+			<!-- Action Buttons -->
+			<div class="d-flex justify-content-end gap-2">
+				<button type="submit" class="btn btn-success" id="saveButton">
+					<i class="fas fa-save mr-1"></i> Save Asset
 				</button>
-				<a asp-action="Index" class="btn btn-secondary">
-					<i class="bi bi-x-circle"></i> Cancel
+				<a asp-controller="Asset" asp-action="Index" class="btn btn-secondary">
+					<i class="fas fa-times mr-1"></i> Cancel
 				</a>
 			</div>
-		</div>
+		</form>
 	</div>
-</form>
+</div>
+
+@section Scripts {
+	<script>
+		// Enable tooltips
+		var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+		var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+			return new bootstrap.Tooltip(tooltipTriggerEl)
+		});
+
+		// Form validation
+		(function () {
+			'use strict'
+			var forms = document.querySelectorAll('.needs-validation')
+			Array.prototype.slice.call(forms).forEach(function (form) {
+				form.addEventListener('submit', function (event) {
+					if (!form.checkValidity()) {
+						event.preventDefault()
+						event.stopPropagation()
+						
+						// Show SweetAlert2 for validation error
+						Swal.fire({
+							icon: 'error',
+							title: 'Validation Error',
+							text: 'Please fill in all required fields before submitting.',
+							confirmButtonColor: '#3085d6'
+						});
+					}
+					form.classList.add('was-validated')
+				}, false)
+			})
+		})()
+
+		// Handle warranty date fields visibility
+		document.getElementById('HaveWarranty').addEventListener('change', function() {
+			var warrantySection = document.getElementById('warrantyDates');
+			var warrantyDateInputs = warrantySection.querySelectorAll('input[type="date"]');
+			
+			if (this.checked) {
+				warrantySection.style.display = 'block';
+				warrantyDateInputs.forEach(function(input) {
+					input.required = true;
+				});
+			} else {
+				warrantySection.style.display = 'none';
+				warrantyDateInputs.forEach(function(input) {
+					input.required = false;
+					input.value = '';
+				});
+			}
+		});
+
+		// Initialize warranty section visibility
+		document.addEventListener('DOMContentLoaded', function() {
+			var haveWarranty = document.getElementById('HaveWarranty');
+			var warrantySection = document.getElementById('warrantyDates');
+			warrantySection.style.display = haveWarranty.checked ? 'block' : 'none';
+		});
+	</script>
+}

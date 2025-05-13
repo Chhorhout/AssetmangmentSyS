@@ -2,7 +2,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-controller="Home" asp-action="Index">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center py-2" asp-controller="Home" asp-action="Index">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
@@ -10,69 +10,86 @@
     </a>
 
     <!-- Divider -->
-    <hr class="sidebar-divider my-0">
+    <hr class="sidebar-divider my-1">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item">
+    <li class="nav-item py-1">
         <a class="nav-link" asp-controller="Home" asp-action="Index">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <i class="fas fa-fw fa-chart-line"></i>
             <span>Dashboard</span>
         </a>
     </li>
 
     <!-- Divider -->
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-1">
 
     <!-- Nav Item - Category -->
-    <li class="nav-item">
+    <li class="nav-item py-0">
         <a class="nav-link" asp-controller="Category" asp-action="Index" data-toggle="collapse" data-target="#collapseCategory">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <i class="fas fa-fw fa-tags"></i>
             <span>Category</span>
         </a>
         <div id="collapseCategory" class="collapse" aria-labelledby="headingCategory" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Components:</h6>
-                <a class="collapse-item" asp-controller="Category" asp-action="Index">Lists of category</a>
-                <a class="collapse-item" asp-controller="Category" asp-action="Add">Add new category</a>
+            <div class="bg-white py-1 collapse-inner rounded">
+                <h6 class="collapse-header py-1">Components for Category:</h6>
+                <a class="collapse-item py-1" asp-controller="Category" asp-action="Index">Lists of category</a>
+                <a class="collapse-item py-1" asp-controller="Category" asp-action="Add">Add new category</a>
             </div>
         </div>
     </li>
 
     <!-- Nav Item - Asset -->
-    <li class="nav-item">
+    <li class="nav-item py-0">
         <a class="nav-link" asp-controller="Asset" asp-action="Index" data-toggle="collapse" data-target="#collapseAsset">
             <i class="fas fa-fw fa-box"></i>
             <span>Asset</span>
         </a>
         <div id="collapseAsset" class="collapse" aria-labelledby="headingAsset" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Components:</h6>
-                <a class="collapse-item" asp-controller="Asset" asp-action="Index">Lists</a>
-                <a class="collapse-item" asp-controller="Asset" asp-action="Add">Add new</a>
+            <div class="bg-white py-1 collapse-inner rounded">
+                <h6 class="collapse-header py-1">Components for Asset:</h6>
+                <a class="collapse-item py-1" asp-controller="Asset" asp-action="Index">Lists</a>
+                <a class="collapse-item py-1" asp-controller="Asset" asp-action="Add">Add new</a>
             </div>
         </div>
     </li>
 
     <!-- Nav Item - User -->
-    <li class="nav-item">
+    <li class="nav-item py-0">
         <a class="nav-link" asp-controller="User" asp-action="Index" data-toggle="collapse" data-target="#collapseUser">
             <i class="fas fa-fw fa-users"></i>
             <span>Users</span>
         </a>
         <div id="collapseUser" class="collapse" aria-labelledby="headingUser" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Components:</h6>
-                <a class="collapse-item" asp-controller="User" asp-action="Index">Lists of User</a>
-                <a class="collapse-item" asp-controller="User" asp-action="input">Add new User</a>
+            <div class="bg-white py-1 collapse-inner rounded">
+                <h6 class="collapse-header py-1">Components for User:</h6>
+                <a class="collapse-item py-1" asp-controller="User" asp-action="Index">Lists of User</a>
+                <a class="collapse-item py-1" asp-controller="User" asp-action="input">Add new User</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Maintainer -->
+    <li class="nav-item py-0">
+        <a class="nav-link" asp-controller="Maintainer" asp-action="Index" data-toggle="collapse" data-target="#collapseMaintainer">
+            <i class="fas fa-fw fa-tools"></i>
+            <span>Maintainer</span>
+        </a>
+        <div id="collapseMaintainer" class="collapse" aria-labelledby="headingMaintainer" data-parent="#accordionSidebar">
+            <div class="bg-white py-1 collapse-inner rounded">  
+                <h6 class="collapse-header py-1">Maintenance Tasks:</h6>
+                <a class="collapse-item py-1" asp-controller="Maintainer" asp-action="Index">Maintenance List</a>
+               
+                <a class="collapse-item py-1" asp-controller="Maintainer" asp-action="Add">Add new Maintainer</a>       
+                
             </div>
         </div>
     </li>
 
     <!-- Divider -->
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-1">
 
     <!-- Heading -->
-    <div class="sidebar-heading">
+    <div class="sidebar-heading py-1">
         Interface
     </div>
 

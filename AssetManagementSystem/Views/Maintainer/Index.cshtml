@@ -1,42 +1,53 @@
-﻿@model List<Asset>
+@model List<Maintainer>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold text-primary">
-            <i class="fas fa-boxes mr-2"></i>Asset List
+            <i class="fas fa-tools mr-2"></i>Maintainer List
         </h6>
         <a asp-action="Add" class="btn btn-primary btn-sm">
-            <i class="fas fa-plus mr-1"></i> Add New Asset
+            <i class="fas fa-plus mr-1"></i> Add New Maintainer
         </a>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover" id="assetTable">
+            <table class="table table-hover" id="maintainerTable">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">Name</th>
-                        <th scope="col">Serial Number</th>
+                        <th scope="col">Contact Info</th>
                         <th scope="col">Status</th>
-                        <th scope="col">Warranty</th>
+                        <th scope="col">Location</th>
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var asset in Model)
+                    @foreach (var maint in Model)
                     {
                         <tr>
                             <td>
-                                <a asp-action="Update" asp-route-id="@asset.Id" class="text-decoration-none">
-                                    <i class="fas fa-box mr-2 text-primary"></i>@asset.Name
+                                <a asp-action="Update" asp-route-id="@maint.Id" class="text-decoration-none">
+                                    <i class="fas fa-user-tie mr-2 text-primary"></i>@maint.Name
                                 </a>
                             </td>
                             <td>
-                                <span class="badge badge-info">
-                                    <i class="fas fa-barcode mr-1"></i>@asset.SerialNumber
-                                </span>
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-envelope text-info mr-2"></i>
+                                        <a href="mailto:@maint.Email" class="text-decoration-none">
+                                            @maint.Email
+                                        </a>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-phone text-success mr-2"></i>
+                                        <a href="tel:@maint.PhoneNumber" class="text-decoration-none">
+                                            @maint.PhoneNumber
+                                        </a>
+                                    </div>
+                                </div>
                             </td>
                             <td>
-                                @if (asset.Active)
+                                @if (maint.Active)
                                 {
                                     <span class="badge badge-success">
                                         <i class="fas fa-check-circle mr-1"></i>Active
@@ -50,29 +61,18 @@
                                 }
                             </td>
                             <td>
-                                @if (asset.HaveWarranty)
-                                {
-                                    <span class="badge badge-warning">
-                                        <i class="fas fa-shield-alt mr-1"></i>Under Warranty
-                                    </span>
-                                }
-                                else
-                                {
-                                    <span class="badge badge-secondary">
-                                        <i class="fas fa-shield-alt mr-1"></i>No Warranty
-                                    </span>
-                                }
+                                <span class="badge badge-info">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>@maint.City
+                                </span>
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group">
-                                    <a asp-action="Update" asp-route-id="@asset.Id" class="btn btn-primary btn-sm" title="Edit">
+                                    <a asp-action="Update" asp-route-id="@maint.Id" class="btn btn-primary btn-sm" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <button class="btn btn-danger btn-sm btnDelete" data-id="@asset.Id" title="Delete">
+                                    <button class="btn btn-danger btn-sm btnDelete" data-id="@maint.Id" title="Delete">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
-                                  
-                                 
                                 </div>
                             </td>
                         </tr>
@@ -82,7 +82,6 @@
         </div>
     </div>
 </div>
-
 @section Scripts {
     
     <script>
@@ -100,10 +99,10 @@
                     if (result.isConfirmed) {
                         var id = $(this).data('id');
                         $.ajax({
-                            url: '/Asset/Delete/' + id,
+                            url: '/Maintainer/Delete/' + id,
                             type: 'GET',
                             success: function (response) {
-                                window.location.href = '/Asset/Index';
+                                window.location.href = '/Maintainer/Index';
                             }
                         });
                     }
@@ -113,5 +112,3 @@
     </script>
 }
 
-
-    
