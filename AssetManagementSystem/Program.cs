@@ -13,6 +13,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(action => {
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
+ app.UseCors(builder =>
+    builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithExposedHeaders("X-Total-Pages", "X-Current-Page", "X-Page-Size", "X-Total-Count")
+);
 
 app.UseRouting();
 

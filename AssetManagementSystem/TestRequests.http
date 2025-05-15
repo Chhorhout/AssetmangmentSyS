@@ -1,0 +1,225 @@
+@baseUrl = http://localhost:5000
+@categoryId = 00000000-0000-0000-0000-000000000000
+@assetId = 00000000-0000-0000-0000-000000000000
+@userId = 00000000-0000-0000-0000-000000000000
+
+### Get all categories (first page)
+GET {{baseUrl}}/api/Categories
+Accept: application/json
+
+### Get categories with pagination (page 2)
+GET {{baseUrl}}/api/Categories?page=2
+Accept: application/json
+
+### Search categories by name
+GET {{baseUrl}}/api/Categories?searchTerm=test&searchBy=name
+Accept: application/json
+
+### Search categories by createdBy
+GET {{baseUrl}}/api/Categories?searchTerm=user&searchBy=createdby
+Accept: application/json
+
+### Search categories by kilogram
+GET {{baseUrl}}/api/Categories?searchTerm=15&searchBy=kilogram
+Accept: application/json
+
+### Search across all fields
+GET {{baseUrl}}/api/Categories?searchTerm=test
+Accept: application/json
+
+### Search with pagination
+GET {{baseUrl}}/api/Categories?searchTerm=test&page=2
+Accept: application/json
+
+### Get a specific category by ID
+GET {{baseUrl}}/api/Categories/{{categoryId}}
+Accept: application/json
+
+### Create a new category
+POST {{baseUrl}}/api/Categories
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "Test Category",
+    "createdBy": "Test User",
+    "active": true,
+    "kilogram": "15"
+}
+
+### Update an existing category
+PUT {{baseUrl}}/api/Categories/{{categoryId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "Updated Category",
+    "createdBy": "Updated User",
+    "active": true,
+    "kilogram": "20"
+}
+
+### Delete a category
+DELETE {{baseUrl}}/api/Categories/{{categoryId}}
+Accept: application/json
+
+### Test pagination headers with search
+GET {{baseUrl}}/api/Categories?searchTerm=test
+Accept: application/json
+# Check response headers:
+# X-Total-Count: Total number of matching categories
+# X-Total-Pages: Total number of pages for matching results
+# X-Current-Page: Current page number
+# X-Page-Size: Number of records per page (5)
+
+### Get all assets (first page)
+GET {{baseUrl}}/api/Assets
+Accept: application/json
+
+### Get assets with pagination (page 2)
+GET {{baseUrl}}/api/Assets?page=2
+Accept: application/json
+
+### Search assets by name
+GET {{baseUrl}}/api/Assets?searchTerm=laptop&searchBy=name
+Accept: application/json
+
+### Search assets by serial number
+GET {{baseUrl}}/api/Assets?searchTerm=SN123&searchBy=serialnumber
+Accept: application/json
+
+### Search assets with warranty
+GET {{baseUrl}}/api/Assets?searchTerm=true&searchBy=warranty
+Accept: application/json
+
+### Search active assets
+GET {{baseUrl}}/api/Assets?searchTerm=true&searchBy=active
+Accept: application/json
+
+### Search across all fields
+GET {{baseUrl}}/api/Assets?searchTerm=laptop
+Accept: application/json
+
+### Search with pagination
+GET {{baseUrl}}/api/Assets?searchTerm=laptop&page=2
+Accept: application/json
+
+### Get a specific asset by ID
+GET {{baseUrl}}/api/Assets/{{assetId}}
+Accept: application/json
+
+### Create a new asset
+POST {{baseUrl}}/api/Assets
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "Test Laptop",
+    "serialNumber": "SN123456",
+    "active": true,
+    "haveWarranty": true,
+    "warrantyStartDate": "2024-03-20T00:00:00Z",
+    "warrantyEndDate": "2025-03-20T00:00:00Z"
+}
+
+### Update an existing asset
+PUT {{baseUrl}}/api/Assets/{{assetId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "Updated Laptop",
+    "serialNumber": "SN123456",
+    "active": true,
+    "haveWarranty": true,
+    "warrantyStartDate": "2024-03-20T00:00:00Z",
+    "warrantyEndDate": "2025-03-20T00:00:00Z"
+}
+
+### Delete an asset
+DELETE {{baseUrl}}/api/Assets/{{assetId}}
+Accept: application/json
+
+### Test pagination headers with search
+GET {{baseUrl}}/api/Assets?searchTerm=laptop
+Accept: application/json
+# Check response headers:
+# X-Total-Count: Total number of matching assets
+# X-Total-Pages: Total number of pages for matching results
+# X-Current-Page: Current page number
+# X-Page-Size: Number of records per page (5)
+
+### Get all users (first page)
+GET {{baseUrl}}/api/Users
+Accept: application/json
+
+### Get users with pagination (page 2)
+GET {{baseUrl}}/api/Users?page=2
+Accept: application/json
+
+### Search users by name
+GET {{baseUrl}}/api/Users?searchTerm=john&searchBy=name
+Accept: application/json
+
+### Search users by email
+GET {{baseUrl}}/api/Users?searchTerm=@gmail.com&searchBy=email
+Accept: application/json
+
+### Search users by role
+GET {{baseUrl}}/api/Users?searchTerm=admin&searchBy=role
+Accept: application/json
+
+### Search active users
+GET {{baseUrl}}/api/Users?searchTerm=true&searchBy=active
+Accept: application/json
+
+### Search across all fields
+GET {{baseUrl}}/api/Users?searchTerm=john
+Accept: application/json
+
+### Search with pagination
+GET {{baseUrl}}/api/Users?searchTerm=john&page=2
+Accept: application/json
+
+### Get a specific user by ID
+GET {{baseUrl}}/api/Users/{{userId}}
+Accept: application/json
+
+### Create a new user
+POST {{baseUrl}}/api/Users
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "password": "securepassword123",
+    "role": "Admin",
+    "active": true
+}
+
+### Update an existing user
+PUT {{baseUrl}}/api/Users/{{userId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "John Doe Updated",
+    "email": "john.doe.updated@example.com",
+    "password": "newsecurepassword123",
+    "role": "SuperAdmin",
+    "active": true
+}
+
+### Delete a user
+DELETE {{baseUrl}}/api/Users/{{userId}}
+Accept: application/json
+
+### Test pagination headers with search
+GET {{baseUrl}}/api/Users?searchTerm=john
+Accept: application/json
+# Check response headers:
+# X-Total-Count: Total number of matching users
+# X-Total-Pages: Total number of pages for matching results
+# X-Current-Page: Current page number
+# X-Page-Size: Number of records per page (10) 

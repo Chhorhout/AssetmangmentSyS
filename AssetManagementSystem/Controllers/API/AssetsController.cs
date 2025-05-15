@@ -9,7 +9,6 @@ using AssetManagementSystem.Dtos;
 using AutoMapper;
 
 namespace AssetManagementSystem.Controllers.API
-
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -17,7 +16,7 @@ namespace AssetManagementSystem.Controllers.API
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-
+        private const int PageSize = 10;
 
         public AssetsController(ApplicationDbContext context, IMapper mapper)
         {
@@ -26,12 +25,65 @@ namespace AssetManagementSystem.Controllers.API
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Asset>>> GetAssets()
+        public async Task<ActionResult<IEnumerable<Asset>>> GetAssets(
+            int? page,
+            string? searchTerm,
+            string? searchBy = "name")
         {
-            return await _context.Assets.ToListAsync();
+            int pageNumber = page ?? 1;
+            var query = _context.Assets.AsNoTracking();
+
+            // Apply search filter if searchTerm is provided
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                switch (searchBy.ToLower())
+                {
+                    case "name":
+                        query = query.Where(a => a.Name.ToLower().Contains(searchTerm));
+                        break;
+                    case "serialnumber":
+                        query = query.Where(a => a.SerialNumber.ToLower().Contains(searchTerm));
+                        break;
+                    case "warranty":
+                        if (bool.TryParse(searchTerm, out bool hasWarranty))
+                        {
+                            query = query.Where(a => a.HaveWarranty == hasWarranty);
+                        }
+                        break;
+                    case "active":
+                        if (bool.TryParse(searchTerm, out bool isActive))
+                        {
+                            query = query.Where(a => a.Active == isActive);
+                        }
+                        break;
+                    default:
+                        query = query.Where(a => a.Name.ToLower().Contains(searchTerm) || 
+                                               a.SerialNumber.ToLower().Contains(searchTerm));
+                        break;
+                }
+            }
+       
+        
+
+
+            var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
+
+            var assets = await query
+                .Skip((pageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            Response.Headers.Add("X-Total-Count", totalItems.ToString());
+            Response.Headers.Add("X-Total-Pages", totalPages.ToString());
+            Response.Headers.Add("X-Current-Page", pageNumber.ToString());
+            Response.Headers.Add("X-Page-Size", PageSize.ToString());
+
+            return assets;
         }
         
-        [HttpGet("{id}")]
+             [HttpGet("{id}")]
         public async Task<ActionResult<Asset>> GetAsset(Guid id)
         {
             var asset = await _context.Assets.FindAsync(id);
@@ -41,6 +93,7 @@ namespace AssetManagementSystem.Controllers.API
             }
             return asset;
         }
+        
         
         [HttpPost]
         public async Task<ActionResult<Asset>> PostAsset(AssetCreateDto dto)
@@ -53,7 +106,7 @@ namespace AssetManagementSystem.Controllers.API
             var asset = _mapper.Map<Asset>(dto);
             _context.Assets.Add(asset);
             await _context.SaveChangesAsync(); 
-            return CreatedAtAction(nameof(GetAsset), new { id = asset.Id }, asset);
+            return CreatedAtAction(nameof(GetAssets), new { id = asset.Id }, asset);
         }   
         
         [HttpPut("{id}")]

@@ -16,6 +16,7 @@ namespace AssetManagementSystem.Controllers.API
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private const int PageSize = 10;    
 
         public CategoriesController(ApplicationDbContext context, IMapper mapper)
         {
@@ -23,11 +24,54 @@ namespace AssetManagementSystem.Controllers.API
             _mapper = mapper;
         }
 
-         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories(
+            int? page,
+            string? searchTerm,
+            string? searchBy = "name")
         {
-            return await _context.Categories.ToListAsync();
+            int pageNumber = page ?? 1;
+            var query = _context.Categories.AsNoTracking();
+
+            // Apply search filter if searchTerm is provided
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                switch (searchBy.ToLower())
+                {
+                    case "name":
+                        query = query.Where(c => c.Name.ToLower().Contains(searchTerm));
+                        break;
+                    case "createdby":
+                        query = query.Where(c => c.CreatedBy.ToLower().Contains(searchTerm));
+                        break;
+                    case "kilogram":
+                        query = query.Where(c => c.Kilogram.ToLower().Contains(searchTerm));
+                        break;
+                    default:
+                        query = query.Where(c => c.Name.ToLower().Contains(searchTerm) || 
+                                               c.CreatedBy.ToLower().Contains(searchTerm) ||
+                                               c.Kilogram.ToLower().Contains(searchTerm));
+                        break;
+                }
+            }
+
+            var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
+
+            var categories = await query
+                .Skip((pageNumber - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            Response.Headers.Add("X-Total-Count", totalItems.ToString());
+            Response.Headers.Add("X-Total-Pages", totalPages.ToString());
+            Response.Headers.Add("X-Current-Page", pageNumber.ToString());
+            Response.Headers.Add("X-Page-Size", PageSize.ToString());
+
+            return categories;
         }
+        
         
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(Guid id)
