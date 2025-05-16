@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AssetManagementSystem.Models
 {
@@ -16,5 +17,14 @@ namespace AssetManagementSystem.Models
         public bool HaveWarranty { get; set; }
         public DateTime? WarrantyStartDate { get; set; }
         public DateTime? WarrantyEndDate { get; set; }
+
+        public Guid SupplierId { get; set; }
+
+        public Supplier Supplier { get; set; }
+
+        // Navigation properties
+        public Guid CategoryId { get; set; }
+        public Category Category { get; set; }
     }
 }
+        

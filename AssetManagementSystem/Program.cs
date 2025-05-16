@@ -1,10 +1,18 @@
 using AssetManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using AssetManagementSystem.Mapping;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+// Add services to the container.
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        // options.JsonSerializerOptions.MaxDepth = 2;
+    });
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(action => { 
     action.UseSqlServer(builder.Configuration.GetConnectionString("default"));

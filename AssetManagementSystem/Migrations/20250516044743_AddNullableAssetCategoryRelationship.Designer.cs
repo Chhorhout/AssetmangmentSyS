@@ -4,6 +4,7 @@ using AssetManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssetManagementSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250516044743_AddNullableAssetCategoryRelationship")]
+    partial class AddNullableAssetCategoryRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,17 +32,13 @@ namespace AssetManagementSystem.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Active")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid?>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("HaveWarranty")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -51,9 +50,6 @@ namespace AssetManagementSystem.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
-                    b.Property<Guid>("SupplierId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("WarrantyEndDate")
                         .HasColumnType("datetime2");
 
@@ -63,8 +59,6 @@ namespace AssetManagementSystem.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("SupplierId");
 
                     b.ToTable("Assets");
                 });
@@ -194,27 +188,12 @@ namespace AssetManagementSystem.Migrations
                 {
                     b.HasOne("AssetManagementSystem.Models.Category", "Category")
                         .WithMany("Assets")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("AssetManagementSystem.Models.Supplier", "Supplier")
-                        .WithMany("Assets")
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
-
-                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("AssetManagementSystem.Models.Category", b =>
-                {
-                    b.Navigation("Assets");
-                });
-
-            modelBuilder.Entity("AssetManagementSystem.Models.Supplier", b =>
                 {
                     b.Navigation("Assets");
                 });

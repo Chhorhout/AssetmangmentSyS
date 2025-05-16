@@ -17,6 +17,8 @@ namespace AssetManagementSystem.Models
         public string PhoneNumber { get; set; }
 
         public bool Active { get; set; }
+
+        public ICollection<Asset> Assets { get; set; }
         
     }
 }

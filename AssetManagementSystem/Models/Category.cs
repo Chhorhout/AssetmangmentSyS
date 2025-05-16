@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace AssetManagementSystem.Models
 {
@@ -15,5 +16,8 @@ namespace AssetManagementSystem.Models
         public bool Active { get; set; }
         [StringLength(50)]
         public string Kilogram { get; set; }
+
+        // Navigation properties
+        public ICollection<Asset> Assets { get; set; }
     }
 }

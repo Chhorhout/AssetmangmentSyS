@@ -18,5 +18,11 @@ namespace AssetManagementSystem.Data
         public DbSet<User> Users { get; internal set; }
         public DbSet<Maintainer> Maintainers { get; internal set; }
         public DbSet<Supplier> Suppliers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder){
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            base.OnModelCreating(modelBuilder);
+        }
     }
+
 }

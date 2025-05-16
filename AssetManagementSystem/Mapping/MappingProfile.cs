@@ -14,6 +14,12 @@ namespace AssetManagementSystem.Mapping
             CreateMap<UserCreateDto, User>();
             CreateMap<MaintainerCreateDto, Maintainer>();
             CreateMap<SupplierCreateDto, Supplier>();
+            CreateMap<Asset, AssetResponseDto>()
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+            .ForMember(dest => dest.SupplierName, opt => opt.MapFrom(src => src.Supplier.Name));
+            
+            CreateMap<Category, CategoryResponseDto>();
+            CreateMap<Supplier, SupplierResponseDto>();
         
         }
     }

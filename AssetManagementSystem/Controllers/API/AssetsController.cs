@@ -31,7 +31,10 @@ namespace AssetManagementSystem.Controllers.API
             string? searchBy = "name")
         {
             int pageNumber = page ?? 1;
-            var query = _context.Assets.AsNoTracking();
+            var query = _context.Assets
+            .Include(a => a.Category)
+            .Include(a => a.Supplier)
+            .AsNoTracking();
 
             // Apply search filter if searchTerm is provided
             if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -80,18 +83,26 @@ namespace AssetManagementSystem.Controllers.API
             Response.Headers.Add("X-Current-Page", pageNumber.ToString());
             Response.Headers.Add("X-Page-Size", PageSize.ToString());
 
-            return assets;
+            var assetResponseDtos = _mapper.Map<List<AssetResponseDto>>(assets);
+
+            return Ok(assetResponseDtos);
         }
         
              [HttpGet("{id}")]
-        public async Task<ActionResult<Asset>> GetAsset(Guid id)
+        public async Task<ActionResult<AssetResponseDto>> GetAsset(Guid id)
         {
-            var asset = await _context.Assets.FindAsync(id);
+            var asset = await _context.Assets
+                .Include(a => a.Category)
+                .Include(a => a.Supplier)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
+            var dto = _mapper.Map<AssetResponseDto>(asset);
+
             if (asset == null)
             {
                 return NotFound();
             }
-            return asset;
+            return dto;
         }
         
         
@@ -104,9 +115,29 @@ namespace AssetManagementSystem.Controllers.API
             }
 
             var asset = _mapper.Map<Asset>(dto);
+            var supplier = await _context.Suppliers.FindAsync(dto.SupplierId);
+            if (supplier == null)
+            {
+                return BadRequest("Supplier not found");
+            }
+            asset.Supplier = supplier;
+            var category = await _context.Categories.FindAsync(dto.CategoryId);
+            if (category == null)
+            {
+                return BadRequest("Category not found");
+            }
+            asset.Category = category;
+
             _context.Assets.Add(asset);
+
+
             await _context.SaveChangesAsync(); 
-            return CreatedAtAction(nameof(GetAssets), new { id = asset.Id }, asset);
+
+            var assetResponseDto = _mapper.Map<AssetResponseDto>(asset);
+            var supplierResponseDto = _mapper.Map<SupplierResponseDto>(asset.Supplier);
+            var categoryResponseDto = _mapper.Map<CategoryResponseDto>(asset.Category);
+
+            return CreatedAtAction(nameof(GetAsset), new { id = asset.Id }, assetResponseDto);
         }   
         
         [HttpPut("{id}")]
@@ -123,7 +154,7 @@ namespace AssetManagementSystem.Controllers.API
             }
             _mapper.Map(dto, asset);
             await _context.SaveChangesAsync();
-            return Ok(asset);
+            return Ok(_mapper.Map<AssetResponseDto>(asset));
         }
         
         
@@ -138,7 +169,7 @@ namespace AssetManagementSystem.Controllers.API
             }
             _context.Assets.Remove(asset);
             await _context.SaveChangesAsync();
-            return Ok(asset);
+            return Ok(_mapper.Map<AssetResponseDto>(asset));
         }
         
         
