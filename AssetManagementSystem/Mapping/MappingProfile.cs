@@ -13,7 +13,8 @@ namespace AssetManagementSystem.Mapping
             CreateMap<CategoryCreateDto, Category>();
             CreateMap<UserCreateDto, User>();
             CreateMap<MaintainerCreateDto, Maintainer>();
-            // Add more mappings as needed]
+            CreateMap<SupplierCreateDto, Supplier>();
+        
         }
     }
 } 

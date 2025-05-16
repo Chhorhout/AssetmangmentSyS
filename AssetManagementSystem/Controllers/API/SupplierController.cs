@@ -12,26 +12,26 @@ namespace AssetManagementSystem.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MaintainerController : ControllerBase
+    public class SupplierController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private const int PageSize = 7;
 
-        public MaintainerController(ApplicationDbContext context, IMapper mapper)
+        public SupplierController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Maintainer>>> GetMaintainers(
+        public async Task<ActionResult<IEnumerable<Supplier>>> GetSuppliers(
             int? page,
             string? searchTerm,
             string? searchBy = "name")
         {
             int pageNumber = page ?? 1;
-            var query = _context.Maintainers.AsNoTracking();
+            var query = _context.Suppliers.AsNoTracking();
 
             // Apply search filter if searchTerm is provided
             if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -40,28 +40,24 @@ namespace AssetManagementSystem.Controllers.API
                 switch (searchBy.ToLower())
                 {
                     case "name":
-                        query = query.Where(m => m.Name.ToLower().Contains(searchTerm));
+                        query = query.Where(s => s.Name.ToLower().Contains(searchTerm));
                         break;
                     case "email":
-                        query = query.Where(m => m.Email.ToLower().Contains(searchTerm));
+                        query = query.Where(s => s.Email.ToLower().Contains(searchTerm));
                         break;
                     case "phonenumber":
-                        query = query.Where(m => m.PhoneNumber.ToLower().Contains(searchTerm));
-                        break;
-                    case "city":
-                        query = query.Where(m => m.City.ToLower().Contains(searchTerm));
+                        query = query.Where(s => s.PhoneNumber.ToLower().Contains(searchTerm));
                         break;
                     case "active":
                         if (bool.TryParse(searchTerm, out bool isActive))
                         {
-                            query = query.Where(m => m.Active == isActive);
+                            query = query.Where(s => s.Active == isActive);
                         }
                         break;
                     default:
-                        query = query.Where(m => m.Name.ToLower().Contains(searchTerm) || 
-                                               m.Email.ToLower().Contains(searchTerm) ||
-                                               m.PhoneNumber.ToLower().Contains(searchTerm) ||
-                                               m.City.ToLower().Contains(searchTerm));
+                        query = query.Where(s => s.Name.ToLower().Contains(searchTerm) || 
+                                               s.Email.ToLower().Contains(searchTerm) ||
+                                               s.PhoneNumber.ToLower().Contains(searchTerm));
                         break;
                 }
             }
@@ -69,7 +65,7 @@ namespace AssetManagementSystem.Controllers.API
             var totalItems = await query.CountAsync();
             var totalPages = (int)Math.Ceiling(totalItems / (double)PageSize);
 
-            var maintainers = await query
+            var suppliers = await query
                 .Skip((pageNumber - 1) * PageSize)
                 .Take(PageSize)
                 .ToListAsync();
@@ -79,64 +75,64 @@ namespace AssetManagementSystem.Controllers.API
             Response.Headers.Add("X-Current-Page", pageNumber.ToString());
             Response.Headers.Add("X-Page-Size", PageSize.ToString());
 
-            return maintainers;
+            return suppliers;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Maintainer>> GetMaintainer(Guid id)
+        public async Task<ActionResult<Supplier>> GetSupplier(Guid id)
         {
-            var maintainer = await _context.Maintainers.FindAsync(id);
-            if (maintainer == null)
+            var supplier = await _context.Suppliers.FindAsync(id);
+            if (supplier == null)
             {
                 return NotFound();
             }
-            return maintainer;
+            return supplier;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Maintainer>> PostMaintainer(MaintainerCreateDto dto)
+        public async Task<ActionResult<Supplier>> PostSupplier(SupplierCreateDto dto)
         {
             if (dto == null)
             {
-                return BadRequest("Maintainer data is required");
+                return BadRequest("Supplier data is required");
             }
 
-            var maintainer = _mapper.Map<Maintainer>(dto);
-            await _context.Maintainers.AddAsync(maintainer);
+            var supplier = _mapper.Map<Supplier>(dto);
+            await _context.Suppliers.AddAsync(supplier);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetMaintainer), new { id = maintainer.Id }, maintainer);
+            return CreatedAtAction(nameof(GetSupplier), new { id = supplier.Id }, supplier);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMaintainer(Guid id, MaintainerCreateDto dto)
+        public async Task<IActionResult> PutSupplier(Guid id, SupplierCreateDto dto)
         {
             if (dto == null)
             {
-                return BadRequest("Maintainer data is required");
+                return BadRequest("Supplier data is required");
             }
 
-            var maintainer = await _context.Maintainers.FindAsync(id);
-            if (maintainer == null)
+            var supplier = await _context.Suppliers.FindAsync(id);
+            if (supplier == null)
             {
                 return NotFound();
             }
 
-            _mapper.Map(dto, maintainer);
+            _mapper.Map(dto, supplier);
             await _context.SaveChangesAsync();
-            return Ok(maintainer);
+            return Ok(supplier);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMaintainer(Guid id)
+        public async Task<IActionResult> DeleteSupplier(Guid id)
         {
-            var maintainer = await _context.Maintainers.FindAsync(id);
-            if (maintainer == null)
+            var supplier = await _context.Suppliers.FindAsync(id);
+            if (supplier == null)
             {
                 return NotFound();
             }
-            _context.Maintainers.Remove(maintainer);
+            _context.Suppliers.Remove(supplier);
             await _context.SaveChangesAsync();
-            return Ok(maintainer);
+            return Ok(supplier);
         }
     }
 }

@@ -17,5 +17,6 @@ namespace AssetManagementSystem.Data
         public DbSet<Asset> Assets { get; set; }
         public DbSet<User> Users { get; internal set; }
         public DbSet<Maintainer> Maintainers { get; internal set; }
+        public DbSet<Supplier> Suppliers { get; set; }
     }
 }
