@@ -19,6 +19,7 @@ namespace AssetManagementSystem.Models
         public bool Active { get; set; }
 
         public ICollection<Asset> Assets { get; set; }
+    
         
     }
 }

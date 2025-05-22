@@ -7,6 +7,7 @@ using AssetManagementSystem.Data;
 using AssetManagementSystem.Models;
 using AssetManagementSystem.Dtos;
 using AutoMapper;
+using System.ComponentModel.DataAnnotations;
 
 namespace AssetManagementSystem.Controllers.API
 {
@@ -25,7 +26,7 @@ namespace AssetManagementSystem.Controllers.API
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Supplier>>> GetSuppliers(
+        public async Task<ActionResult<IEnumerable<SupplierResponseDto>>> GetSuppliers(
             int? page,
             string? searchTerm,
             string? searchBy = "name")
@@ -75,32 +76,48 @@ namespace AssetManagementSystem.Controllers.API
             Response.Headers.Add("X-Current-Page", pageNumber.ToString());
             Response.Headers.Add("X-Page-Size", PageSize.ToString());
 
-            return suppliers;
+            var supplierDtos = _mapper.Map<List<SupplierResponseDto>>(suppliers);
+            return Ok(supplierDtos);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Supplier>> GetSupplier(Guid id)
+        public async Task<ActionResult<SupplierResponseDto>> GetSupplier(Guid id)
         {
             var supplier = await _context.Suppliers.FindAsync(id);
             if (supplier == null)
             {
                 return NotFound();
             }
-            return supplier;
+            var supplierDto = _mapper.Map<SupplierResponseDto>(supplier);
+            return Ok(supplierDto);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Supplier>> PostSupplier(SupplierCreateDto dto)
+        public async Task<ActionResult<SupplierCreateDto>> PostSupplier(SupplierCreateDto dto)
         {
             if (dto == null)
             {
                 return BadRequest("Supplier data is required");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Validate email format
+            if (!new EmailAddressAttribute().IsValid(dto.Email))
+            {
+                ModelState.AddModelError("Email", "Invalid email format");
+                return BadRequest(ModelState);
+            }
+
             var supplier = _mapper.Map<Supplier>(dto);
             await _context.Suppliers.AddAsync(supplier);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetSupplier), new { id = supplier.Id }, supplier);
+
+            var supplierDto = _mapper.Map<SupplierCreateDto>(supplier);
+            return CreatedAtAction(nameof(GetSupplier), new { id = supplier.Id }, supplierDto);
         }
 
         [HttpPut("{id}")]
@@ -111,6 +128,18 @@ namespace AssetManagementSystem.Controllers.API
                 return BadRequest("Supplier data is required");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Validate email format
+            if (!new EmailAddressAttribute().IsValid(dto.Email))
+            {
+                ModelState.AddModelError("Email", "Invalid email format");
+                return BadRequest(ModelState);
+            }
+
             var supplier = await _context.Suppliers.FindAsync(id);
             if (supplier == null)
             {
@@ -119,10 +148,12 @@ namespace AssetManagementSystem.Controllers.API
 
             _mapper.Map(dto, supplier);
             await _context.SaveChangesAsync();
-            return Ok(supplier);
+
+            var supplierDto = _mapper.Map<SupplierCreateDto>(supplier);
+            return Ok(supplierDto);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}")]    
         public async Task<IActionResult> DeleteSupplier(Guid id)
         {
             var supplier = await _context.Suppliers.FindAsync(id);
@@ -130,9 +161,18 @@ namespace AssetManagementSystem.Controllers.API
             {
                 return NotFound();
             }
+
+            var hasAssets = await _context.Assets.AnyAsync(a => a.SupplierId == id);
+            if (hasAssets)
+            {
+                return BadRequest("Cannot delete supplier with associated assets");
+            }
+
             _context.Suppliers.Remove(supplier);
             await _context.SaveChangesAsync();
-            return Ok(supplier);
+
+            var supplierDto = _mapper.Map<SupplierCreateDto>(supplier);
+            return Ok(supplierDto);
         }
     }
 }

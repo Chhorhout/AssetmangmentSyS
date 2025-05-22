@@ -2,6 +2,7 @@ using AssetManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using AssetManagementSystem.Mapping;
 using System.Text.Json.Serialization;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+
         // options.JsonSerializerOptions.MaxDepth = 2;
     });
 

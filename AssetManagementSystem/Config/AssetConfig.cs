@@ -17,6 +17,11 @@ namespace AssetManagementSystem.Config
                 .IsRequired()
                 .HasMaxLength(25);
 
+            builder.Property(a => a.Location)
+                .IsRequired()
+                .HasMaxLength(50);
+
+
             builder.Property(a => a.Active)
                 .IsRequired()
                 .HasDefaultValue(true);
@@ -24,6 +29,10 @@ namespace AssetManagementSystem.Config
             builder.Property(a => a.HaveWarranty)
                 .IsRequired()
                 .HasDefaultValue(false);
+
+            builder.Property(a => a.ImageUrl)
+                .IsRequired(false)
+                .HasMaxLength(255);
 
             builder.HasOne(a => a.Category)
                 .WithMany(c => c.Assets)
@@ -34,6 +43,7 @@ namespace AssetManagementSystem.Config
                 .WithMany(s => s.Assets)
                 .HasForeignKey(a => a.SupplierId)
                 .OnDelete(DeleteBehavior.Restrict);
+                
         }
     }
 }

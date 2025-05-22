@@ -16,7 +16,7 @@ namespace AssetManagementSystem.Controllers.API
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private const int PageSize = 10;
+        private const int PageSize = 4;
 
         public AssetsController(ApplicationDbContext context, IMapper mapper)
         {
@@ -62,7 +62,7 @@ namespace AssetManagementSystem.Controllers.API
                         break;
                     default:
                         query = query.Where(a => a.Name.ToLower().Contains(searchTerm) || 
-                                               a.SerialNumber.ToLower().Contains(searchTerm));
+                                             a.SerialNumber.ToLower().Contains(searchTerm));
                         break;
                 }
             }
@@ -107,13 +107,18 @@ namespace AssetManagementSystem.Controllers.API
         
         
         [HttpPost]
-        public async Task<ActionResult<Asset>> PostAsset(AssetCreateDto dto)
+        public async Task<ActionResult<AssetResponseDto>> PostAsset(AssetCreateDto dto)
         {  
+
             if (dto == null)
             {
                 return BadRequest("Asset data is required");
             }
 
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var asset = _mapper.Map<Asset>(dto);
             var supplier = await _context.Suppliers.FindAsync(dto.SupplierId);
             if (supplier == null)
@@ -137,22 +142,56 @@ namespace AssetManagementSystem.Controllers.API
             var supplierResponseDto = _mapper.Map<SupplierResponseDto>(asset.Supplier);
             var categoryResponseDto = _mapper.Map<CategoryResponseDto>(asset.Category);
 
-            return CreatedAtAction(nameof(GetAsset), new { id = asset.Id }, assetResponseDto);
+            var responseAssetDto = new
+            {
+                Asset = assetResponseDto,
+                Supplier = supplierResponseDto,
+                Category = categoryResponseDto
+            };
+
+            return CreatedAtAction(nameof(GetAsset), new { id = asset.Id }, responseAssetDto);
         }   
-        
+ 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsset(Guid id, AssetCreateDto dto)
+        public async Task<IActionResult> PutAsset(Guid id, AssetUpdateDto dto)
         {
             if (dto == null)
             {
                 return BadRequest("Asset data is required");
-            }   
-            var asset = await _context.Assets.FindAsync(id);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var asset = await _context.Assets
+                .Include(a => a.Supplier)
+                .Include(a => a.Category)
+                .FirstOrDefaultAsync(a => a.Id == id);
+
             if (asset == null)
             {
                 return NotFound();
             }
+
+            // Validate Supplier
+            var supplier = await _context.Suppliers.FindAsync(dto.SupplierId);
+            if (supplier == null)
+            {
+                return BadRequest("Supplier not found");
+            }
+
+            // Validate Category
+            var category = await _context.Categories.FindAsync(dto.CategoryId);
+            if (category == null)
+            {
+                return BadRequest("Category not found");
+            }
+
             _mapper.Map(dto, asset);
+            asset.Supplier = supplier;
+            asset.Category = category;
             await _context.SaveChangesAsync();
             return Ok(_mapper.Map<AssetResponseDto>(asset));
         }
